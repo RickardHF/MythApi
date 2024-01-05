@@ -4,20 +4,20 @@ param postgresDBUsername string
 @secure()
 param postgresDBPassword string
 
+param keyVaultId string
+
 param postgresDBLocation string = resourceGroup().location
 
 
-resource postgresDB 'Microsoft.DBforPostgreSQL/servers@2017-12-01' = {
-  name: 'goddb-${uniqueString(resourceGroup().id)})'
+resource postgresDB 'Microsoft.DBforPostgreSQL/flexibleServers@2023-03-01-preview' = {
+  name: 'goddbthisisatest'
   location: postgresDBLocation
   sku: {
-    name: 'Standard__B1ms'
+    name: 'Standard_B1ms'
     tier: 'Burstable'
-    capacity: 2
-    family: 'Gen5'
   }
   properties: {
-    version: '16'
+    version: '15'
     createMode: 'Default'
     administratorLogin: postgresDBUsername
     administratorLoginPassword: postgresDBPassword
@@ -26,3 +26,40 @@ resource postgresDB 'Microsoft.DBforPostgreSQL/servers@2017-12-01' = {
 
 output postgresDBID string = postgresDB.id
 output connectionString string = postgresDB.properties.fullyQualifiedDomainName
+
+module setAdminUserName 'CreateSecrets.bicep' = {
+  name: 'setAdminUsername'
+  dependsOn: [
+    postgresDB
+  ]
+  params: {
+    keyVaultId: keyVaultId
+    secretName: 'databaseUsername' 
+    secretValue: postgresDBUsername
+  }
+}
+
+module setAdminPassword 'CreateSecrets.bicep' = {
+  name: 'setAdminPassword'
+  dependsOn: [
+    postgresDB
+  ]
+  params: {
+    keyVaultId: keyVaultId
+    secretName: 'databasePassword' 
+    secretValue: postgresDBPassword
+  }
+}
+
+
+module setConnectionString 'CreateSecrets.bicep' = {
+  name: 'setConnectionString'
+  dependsOn: [
+    postgresDB
+  ]
+  params: {
+    keyVaultId: keyVaultId
+    secretName: 'databaseUsername' 
+    secretValue: postgresDBUsername
+  }
+}
