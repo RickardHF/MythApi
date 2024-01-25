@@ -1,9 +1,23 @@
-using MythApi.Gods.Interfaces;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace MythApi.Gods.Models;
 
-public class God : IGod {
-    public string Name { get; set; } = default!;
-    public string Description { get; set; } = default!;
-    public Mythology Mythology { get; set; } = default!;
+[Table("god")]
+public class GodDbObject {
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
+
+    [Column("name")]
+    public string Name { get; set; } = null!;
+
+    [Column("description")]
+    public string Description { get; set; } = null!;
+
+    [Column("mythology")]
+    public Mythology Mythology { get; set; }
 }
+

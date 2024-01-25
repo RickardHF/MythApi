@@ -1,2 +1,0 @@
-namespace MythApi.Gods.Interfaces;
-
