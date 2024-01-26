@@ -1,13 +1,14 @@
-using MythApi.Gods.Models;
+using MythApi.Common.Database.Models;
+using MythApi.Gods.Database;
 
 namespace MythApi.Gods.Interfaces;
 
 public interface IGodRepository{
-    public Task<IList<GodDbObject>> GetAllGodsAsync();
+    public Task<IList<God>> GetAllGodsAsync();
 
-    public Task<GodDbObject> GetGodAsync(GodParameter parameter);
+    public Task<God> GetGodAsync(GodParameter parameter);
 
-    public Task<List<GodDbObject>> GetGodByNameAsync(GodByNameParameter parameter);
+    public Task<List<God>> GetGodByNameAsync(GodByNameParameter parameter);
 
-    public Task<List<GodDbObject>> AddOrUpdateGods(List<GodDbObject> gods);
+    public Task<List<God>> AddOrUpdateGods(List<God> gods);
 }

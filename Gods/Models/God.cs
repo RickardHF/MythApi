@@ -1,12 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace MythApi.Gods.Models;
 
 [Table("god")]
-public class GodDbObject {
+public class God {
     [Key]
     [Column("id")]
     public int Id { get; set; }

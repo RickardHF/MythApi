@@ -1,19 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using MythApi.Gods.Interfaces;
-using MythApi.Gods.Models;
+using MythApi.Gods.Database;
+using MythApi.Common.Database.Models;
 
 namespace MythApi.Gods.DBRepositories;
 
 public class GodRepository : IGodRepository
 {
-    private readonly AppDBContext _context;
+    private readonly AppDbContext _context;
 
-    public GodRepository(AppDBContext context)
+    public GodRepository(AppDbContext context)
     {
         _context = context;
     }
 
-    public async Task<List<GodDbObject>> AddOrUpdateGods(List<GodDbObject> gods)
+    public async Task<List<God>> AddOrUpdateGods(List<God> gods)
     {
         var existingGods = gods.Where(god => _context.Gods.Any(existing => god.Id == existing.Id)).ToList();
         var newGods = gods.Where(god => !_context.Gods.Any(existing => god.Id == existing.Id)).ToList();
@@ -24,17 +25,17 @@ public class GodRepository : IGodRepository
         return await _context.Gods.ToListAsync();
     }
 
-    public async Task<IList<GodDbObject>> GetAllGodsAsync()
+    public async Task<IList<God>> GetAllGodsAsync()
     {
         return await _context.Gods.ToListAsync();
     }
 
-    public async Task<GodDbObject> GetGodAsync(GodParameter parameter)
+    public async Task<God> GetGodAsync(GodParameter parameter)
     {
         return await _context.Gods.FirstAsync(x => x.Id == parameter.Id);
     }
 
-    public Task<List<GodDbObject>> GetGodByNameAsync(GodByNameParameter parameter)
+    public Task<List<God>> GetGodByNameAsync(GodByNameParameter parameter)
     {
         return Task.FromResult(_context.Gods.Where(god => god.Name.Contains(parameter.Name)).ToList());
     }

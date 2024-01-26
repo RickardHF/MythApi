@@ -30,3 +30,18 @@ docker init
 # <Make changes to compose.yaml>
 docker compose up --build
 ```
+
+```powershell
+# install dotnet ef
+dotnet tool install --global dotnet-ef
+
+# create first migration
+# pre requisite:
+# dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0
+
+# Create first migration
+dotnet ef migrations add InitialCreate
+
+# Update database
+dotnet ef database update
+```
