@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MythApi.Gods.Interfaces;
-using MythApi.Gods.Database;
 using MythApi.Common.Database.Models;
+using MythApi.Common.Database;
 
 namespace MythApi.Gods.DBRepositories;
 

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MythApi.Gods.Interfaces;
 using MythApi.Common.Database.Models;
+
+namespace MythApi.Endpoints.v1;
 public static class Gods {
     public static void RegisterGodEndpoints(this IEndpointRouteBuilder endpoints) {
         

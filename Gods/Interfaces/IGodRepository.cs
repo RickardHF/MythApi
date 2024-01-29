@@ -1,5 +1,4 @@
 using MythApi.Common.Database.Models;
-using MythApi.Gods.Database;
 
 namespace MythApi.Gods.Interfaces;
 

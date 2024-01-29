@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Mythology = MythApi.Common.Database.Models.Mythology;
 using God = MythApi.Common.Database.Models.God;
 
-namespace MythApi.Gods.Database;
+namespace MythApi.Common.Database;
 
 public class AppDbContext : DbContext {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
