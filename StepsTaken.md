@@ -45,3 +45,17 @@ dotnet ef migrations add InitialCreate
 # Update database
 dotnet ef database update
 ```
+
+## Setting up Azure Key Vault
+
+Installing dependencies: 
+```powershell
+dotnet add package Azure.Extensions.AspNetCore.Configuration.Secrets
+# dotnet add package Azure.Security.KeyVault.Secrets
+dotnet add package Azure.Identity
+```
+
+Setting the environment variable 
+```powershell
+$Env:KEY_VAULT_NAME="<your-key-vault-name>"
+```

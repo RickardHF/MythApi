@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Mythology = MythApi.Common.Database.Models.Mythology;
 using God = MythApi.Common.Database.Models.God;
+using MythApi.Common.Database.Models;
 
 namespace MythApi.Common.Database;
 
@@ -9,11 +10,13 @@ public class AppDbContext : DbContext {
 
     public DbSet<God> Gods { get; set; } = null!;
     public DbSet<Mythology> Mythologies { get; set; } = null!;
+    public DbSet<Alias> Aliases { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         // Map entities to tables
         modelBuilder.Entity<Mythology>().ToTable("Mythology");
         modelBuilder.Entity<God>().ToTable("God");
+        modelBuilder.Entity<Alias>().ToTable("Alias");
         
         /*
         modelBuilder.Entity<Mythology>(entity => {
