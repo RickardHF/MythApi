@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MythApi.Gods.Interfaces;
 using MythApi.Common.Database.Models;
+using MythApi.Gods.Models;
 
 namespace MythApi.Endpoints.v1;
 public static class Gods {
@@ -15,7 +16,7 @@ public static class Gods {
         gods.MapPost("", AddOrUpdateGods);
     }
 
-    public static Task<List<God>> AddOrUpdateGods(List<God> gods, IGodRepository repository) => repository.AddOrUpdateGods(gods);
+    public static Task<List<God>> AddOrUpdateGods(List<GodInput> gods, IGodRepository repository) => repository.AddOrUpdateGods(gods);
 
     public static Task<IList<God>> GetAlllGods(IGodRepository repository) => repository.GetAllGodsAsync();
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MythApi.Gods.Interfaces;
 using MythApi.Common.Database.Models;
 using MythApi.Common.Database;
+using MythApi.Gods.Models;
 
 namespace MythApi.Gods.DBRepositories;
 
@@ -14,20 +15,41 @@ public class GodRepository : IGodRepository
         _context = context;
     }
 
-    public async Task<List<God>> AddOrUpdateGods(List<God> gods)
+    public async Task<List<God>> AddOrUpdateGods(List<GodInput> gods)
     {
-        var existingGods = gods.Where(god => _context.Gods.Any(existing => god.Id == existing.Id)).ToList();
-        var newGods = gods.Where(god => !_context.Gods.Any(existing => god.Id == existing.Id)).ToList();
+        foreach(var god in gods) {
+            if (god.Id.HasValue && _context.Gods.Any(x => x.Id == god.Id))
+            {
+                _context.Gods.Where(x => x.Id == god.Id)
+                    .ExecuteUpdate(setter => 
+                        setter.SetProperty(x => x.Name, god.Name)
+                            .SetProperty(x => x.Description, god.Description)
+                        );
+            }
+            else
+            {
+                var newGod = new God
+                {
+                    Name = god.Name,
+                    MythologyId = god.MythologyId,
+                    Description = god.Description
+                };
+                _context.Gods.Add(newGod);
+            }
+        }
 
-        await _context.Gods.AddRangeAsync(newGods);
-        _context.Gods.UpdateRange(existingGods);
         await _context.SaveChangesAsync();
         return await _context.Gods.ToListAsync();
     }
 
     public async Task<IList<God>> GetAllGodsAsync()
     {
-        return await _context.Gods.ToListAsync();
+        var gods = await _context.Gods.ToListAsync();
+        foreach (var god in gods)
+        {
+            _context.Entry(god).Collection(x => x.Aliases).Load();
+        }
+        return gods;
     }
 
     public async Task<God> GetGodAsync(GodParameter parameter)

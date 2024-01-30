@@ -1,4 +1,5 @@
 using MythApi.Common.Database.Models;
+using MythApi.Gods.Models;
 
 namespace MythApi.Gods.Interfaces;
 
@@ -9,5 +10,5 @@ public interface IGodRepository{
 
     public Task<List<God>> GetGodByNameAsync(GodByNameParameter parameter);
 
-    public Task<List<God>> AddOrUpdateGods(List<God> gods);
+    public Task<List<God>> AddOrUpdateGods(List<GodInput> gods);
 }

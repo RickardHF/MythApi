@@ -10,5 +10,5 @@ public class God {
     public string Description { get; set; } = null!;
 
     public int MythologyId { get; set; }
-    public Mythology Mythology { get; set; }
+    public List<Alias> Aliases { get; set; } = [];
 }

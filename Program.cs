@@ -6,7 +6,6 @@ using MythApi.Endpoints.v1;
 using MythApi.Mythologies.DBRepositories;
 using MythApi.Mythologies.Interfaces;
 using Azure.Identity;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,18 +18,12 @@ var credential = new DefaultAzureCredential();
 
 builder.Configuration.AddAzureKeyVault(uri, credential);
 
-var connectionString = $"Host={builder.Configuration["dbHost"]};Database={builder.Configuration["dbName"]};Username={builder.Configuration["adminUser"]};Password={builder.Configuration["adminPassword"]}";
+var connectionString = $"Host={builder.Configuration["dbHost"]};Database={builder.Configuration["dbName"]};Username={builder.Configuration["adminUsername"]};Password={builder.Configuration["adminPassword"]}";
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });
-
-
-foreach (var item in builder.Configuration.AsEnumerable())
-{
-    Console.WriteLine($"{item.Key} = {item.Value}");
-}
 
 builder.Services
     .AddScoped<IGodRepository, GodRepository>()

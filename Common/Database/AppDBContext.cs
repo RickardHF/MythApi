@@ -18,33 +18,20 @@ public class AppDbContext : DbContext {
         modelBuilder.Entity<God>().ToTable("God");
         modelBuilder.Entity<Alias>().ToTable("Alias");
         
-        /*
-        modelBuilder.Entity<Mythology>(entity => {
-            entity.Property(e => e.Id).HasColumnName("id").HasDefaultValueSql("nextval('mythology.id_seq'::regclass)");
-            entity.Property(e => e.Name).HasColumnName("name").IsRequired();
-        });
+        modelBuilder.Entity<God>()
+            .HasMany(e => e.Aliases)
+            .WithOne()
+            .HasForeignKey(e => e.GodId)
+            .IsRequired()
+            ;
+        
         modelBuilder.Entity<Mythology>()
-            .HasMany(m => m.Gods)
-            .WithOne(g => g.Mythology)
-            .HasForeignKey(g => g.MythologyId)
-            .HasPrincipalKey(m => m.Id);
+            .HasMany(e => e.Gods)
+            .WithOne()
+            .HasForeignKey(e => e.MythologyId)
+            .IsRequired()
+            ;
 
-        modelBuilder.Entity<God>(entity => {
-            entity.Property(e => e.Id)
-                .HasColumnName("id")
-                .HasDefaultValueSql("nextval('account.item_id_seq'::regclass)");
-            entity.Property(e => e.Name)
-                .HasColumnName("name")
-                .IsRequired();
-            entity.Property(e => e.Description)
-                .HasColumnName("description")
-                .IsRequired();
-            entity.Property(e => e.Mythology)
-                .HasColumnName("mythology")
-                .IsRequired();
-        });
-
-        */
         base.OnModelCreating(modelBuilder);
     }
 }
