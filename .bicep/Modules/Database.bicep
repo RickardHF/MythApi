@@ -26,6 +26,20 @@ resource postgresDB 'Microsoft.DBforPostgreSQL/flexibleServers@2023-03-01-previe
   }
 }
 
+var postgresdbhost = postgresDB.properties.fullyQualifiedDomainName
+
+module setDBHost 'CreateSecrets.bicep' = {
+  name: 'setDBHost'
+  dependsOn: [
+    postgresDB
+  ]
+  params: {
+    keyVaultId: keyVaultId
+    secretName: 'dbHost' 
+    secretValue: postgresdbhost
+  }
+}
+
 module setAdminUserName 'CreateSecrets.bicep' = {
   name: 'setAdminUsername'
   dependsOn: [
@@ -33,7 +47,7 @@ module setAdminUserName 'CreateSecrets.bicep' = {
   ]
   params: {
     keyVaultId: keyVaultId
-    secretName: 'databaseUsername' 
+    secretName: 'adminUsername' 
     secretValue: postgresDBUsername
   }
 }
@@ -45,7 +59,19 @@ module setAdminPassword 'CreateSecrets.bicep' = {
   ]
   params: {
     keyVaultId: keyVaultId
-    secretName: 'databasePassword' 
+    secretName: 'adminPassword' 
     secretValue: postgresDBPassword
+  }
+}
+
+module setDBName 'CreateSecrets.bicep' = {
+  name: 'setDBName'
+  dependsOn: [
+    postgresDB
+  ]
+  params: {
+    keyVaultId: keyVaultId
+    secretName: 'dbName' 
+    secretValue: 'postgres'
   }
 }
