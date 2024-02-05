@@ -1,10 +1,9 @@
 
 using MythApi.Common.Database.Models;
 
-namespace MythApi.Mythologies.Interfaces
+namespace MythApi.Mythologies.Interfaces;
+
+public interface IMythologyRepository
 {
-    public interface IMythologyRepository
-    {
-        public Task<IList<Mythology>> GetAllMythologiesAsync();
-    }
+    public Task<IList<Mythology>> GetAllMythologiesAsync();
 }

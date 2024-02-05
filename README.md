@@ -45,6 +45,7 @@ In this project we have been using Entity Framework for communication with the d
 
 ```
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0
 ```
 
 ## Authentication
@@ -318,8 +319,177 @@ This use the config values `dbHost`, `dbName`, `adminUsername`, and `adminPasswo
 
 ### Create a Migration
 
-TODO : Fill out
+Now that the database is configured we should be able to run a EntityFramework migration. 
+The migration can create and update the tables in the database.
+
+To migrate you need to have the `dotnet-ef` extension installed. To do that run
+
+```powershell
+dotnet tool install --global dotnet-ef
+```
+
+Once that is installed you can run 
+```powershell
+# Create a migration
+dotnet ef migrations add <Migration name>
+# Update the database with the latest migration
+dotnet ef database update
+```
+
+To start of we'll name the first migration "InitialCreate" the commands would then be 
+```powershell
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+```
+
 
 ## Create Infrastructure
 
+We'll create this domain specific structure, so at root level we specify a folder for each domain, and create all data for each domain within this. 
+
+### Mythologies
+
+#### Interface
+
+We create a folder called `Interfaces` in the `Mythologies` folder. Here we create a file called `IMythologyRepository.cs` which should be the interface for the mythology repository. We define this with a method returning all Mythologies in the database. We'll just return the Mythology object from the database models, however we could've created our own object to map to here.
+
+```csharp
+
+using MythApi.Common.Database.Models;
+
+namespace MythApi.Mythologies.Interfaces;
+
+public interface IMythologyRepository
+{
+    public Task<IList<Mythology>> GetAllMythologiesAsync();
+}
+
+```
+
+#### Repository
+
+After creating the interface for the repository class we create an instance of this interface. We do this in a new folder which we call `DBRepository`. 
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+using MythApi.Common.Database;
+using MythApi.Common.Database.Models;
+using MythApi.Mythologies.Interfaces;
+
+namespace MythApi.Mythologies.DBRepositories;
+
+public class MythologyRepository : IMythologyRepository
+{
+    private readonly AppDbContext _context;
+
+    public MythologyRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<IList<Mythology>> GetAllMythologiesAsync()
+    {
+        return await _context.Mythologies.ToListAsync();
+    }
+}
+```
+
+We use the database context we have previously written and we fetch all the mythologies from the context and return these to the caller.
+
+#### Inject
+
+In the `Program.cs` file we inject the repository we've created for the interface we created.
+
+We do this by adding this code.
+
+```csharp
+builder.Services.AddScoped<IMythologyRepository, MythologyRepository>();
+```
+
+### Gods
+
+TODO : Fill out
+
 ## Create Endpoints
+
+We create a seperate folder for endpoints at root-level called `Endpoints` with a sub-folder called `v1` for the first version of the endpoints. In this folder we create a file for each domain we create endpoints for. Here starting with `Mythologies`.
+
+```csharp
+using MythApi.Common.Database.Models;
+using MythApi.Mythologies.Interfaces;
+
+// Create a class
+public static class Mythologies {
+    // Create an extension method for registering the endpoints to a route builder. 
+    public static void RegisterMythologiesEndpoints(this IEndpointRouteBuilder endpoints) {
+        // Defines the group
+        var mythologies = endpoints.MapGroup("/api/v1/mythologies");
+
+        // Add a get mapping to get all mythologies. Calls a method we define under
+        mythologies.MapGet("", GetAllMythologies); 
+    }
+
+    // The method takes an instance that follows the mythology repository interface
+    // We then call the 'GetAllMythologiesAsync' method and returns the data
+    public static Task<IList<Mythology>> GetAllMythologies(IMythologyRepository repository) => repository.GetAllMythologiesAsync();
+} 
+
+```
+
+Back in the `Program.cs` file we call the extension method we just created by adding.
+```csharp
+app.RegisterMythologiesEndpoints();
+```
+
+Now we can run the application and verify that we are able to retrieve data from the endpoint. If there is no entries in the `Mythology` table the result should be an empty list `[]`. One can add some mythologies manually to the table to get some content one can verify.
+
+At the end of this the `Program.cs` file look like this
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+using MythApi.Gods.Interfaces;
+using MythApi.Gods.DBRepositories;
+using MythApi.Common.Database;
+using MythApi.Endpoints.v1;
+using MythApi.Mythologies.DBRepositories;
+using MythApi.Mythologies.Interfaces;
+using Azure.Identity;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var keyVaultName = builder.Configuration["MYTH_KeyVaultName"];
+var uri = new Uri($"https://{keyVaultName}.vault.azure.net/");
+var credential = new DefaultAzureCredential();
+
+builder.Configuration.AddAzureKeyVault(uri, credential);
+
+var connectionString = $"Host={builder.Configuration["dbHost"]};Database={builder.Configuration["dbName"]};Username={builder.Configuration["adminUsername"]};Password={builder.Configuration["adminPassword"]}";
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseNpgsql(connectionString);
+});
+
+builder.Services
+    .AddScoped<IGodRepository, GodRepository>()
+    .AddScoped<IMythologyRepository, MythologyRepository>();
+
+var app = builder.Build();
+
+app.RegisterGodEndpoints();
+app.RegisterMythologiesEndpoints();
+app.UseSwagger();
+app.UseSwaggerUI();
+
+
+app.Run();
+```
+
+# Future work
+
+- Improve Bicep scripts
+- Set up with kubernetes/image repository etc
+- Add API Authentication & Authorization
