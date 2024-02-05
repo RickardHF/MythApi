@@ -68,7 +68,7 @@ Used DefaultAzureCredentials to connect to key vault to retrieve secrets.
 For local running I could just use ```az login``` to get the neccesary credentials (after first giving myself the access "Key Vault Secrets User" role in Azure to the KeyVault).
 
 For running it in a container locally I created a service principal and used it's Client ID and Client Secret (as well as Tenant Id) in environment variables, that way DefualtAzureCredentials picked it up.
-```docker
+```yaml
     environemt:
       - MYTH_KeyVaultName=${MYTH_KeyVaultName}
       - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
