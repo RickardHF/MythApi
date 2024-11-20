@@ -16,7 +16,7 @@ jobs:
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4
-    - name: Build the Docker image
+    - name: Build the Docker image step
       run: docker build . --file src/Dockerfile --tag my-image-name:$(date +%s)
     - name: Push the Docker image
       if: github.event_name == 'push'
