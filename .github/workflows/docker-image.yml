@@ -9,6 +9,11 @@ on:
       - 'src/**'
       - '.github/workflows/docker-image.yml'
 
+
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
