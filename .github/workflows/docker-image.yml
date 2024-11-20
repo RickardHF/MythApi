@@ -21,10 +21,13 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Set repo name to lowercase
+      id: set_repo_name
+      run: echo "::set-output name=repo_name::${GITHUB_REPOSITORY#*/}"
     - name: Build and maybe push the Docker image
       uses: docker/build-push-action@v6
       with:
         context: .
         file: .src/Dockerfile
         push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        tags: ghcr.io/${{ github.repository }}/mythapi:latest
+        tags: ghcr.io/${{ steps.set_repo_name }}/mythapi:latest
