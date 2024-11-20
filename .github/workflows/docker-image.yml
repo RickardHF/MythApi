@@ -28,6 +28,6 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         context: .
-        file: .src/Dockerfile
+        file: ./src/Dockerfile
         push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         tags: ghcr.io/${{ steps.set_repo_name.outputs.repository }}/mythapi:latest
