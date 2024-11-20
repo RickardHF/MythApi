@@ -23,7 +23,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Set repo name to lowercase
       id: set_repo_name
-      run: echo "::set-output name=repo_name::${GITHUB_REPOSITORY#*/}"
+      run: echo "::set-output name=repo_name::$($env:GITHUB_REPOSITORY.ToLowerInvariant())"
     - name: Build and maybe push the Docker image
       uses: docker/build-push-action@v6
       with:
