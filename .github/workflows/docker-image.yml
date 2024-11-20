@@ -14,5 +14,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - run: ls
     - name: Build the Docker image
       run: docker build . --file src/Dockerfile --tag my-image-name:$(date +%s)
