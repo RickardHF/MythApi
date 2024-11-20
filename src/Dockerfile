@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
-COPY *.csproj ./
+COPY src/*.csproj ./
 
 RUN dotnet restore
 
