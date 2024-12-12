@@ -41,12 +41,12 @@ jobs:
         tags: ghcr.io/${{ steps.set_repo_name.outputs.repository }}/mythapi:latest
   dep:
     runs-on: ubuntu-latest
+    environment: ${{ matrix.envo }}
     strategy:
       matrix:
-        var1: ['banan', 'epple']
-        var2: ['1', '2', '3']
+        envo: ['banan', 'epple']
     steps:
       - name: Output 
-        run: echo "My name ${{ matrix.var1 }} is ${{ matrix.var2 }}"
+        run: echo "My name ${{ vars.MY_NAME }}"
       
       
