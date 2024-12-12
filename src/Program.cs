@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Comment for test purposes
+
 var keyVaultName = builder.Configuration["MYTH_KeyVaultName"];
 var uri = new Uri($"https://{keyVaultName}.vault.azure.net/");
 var credential = new DefaultAzureCredential();
