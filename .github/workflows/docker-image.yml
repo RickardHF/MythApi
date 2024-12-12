@@ -52,7 +52,6 @@ jobs:
       group: group2
       cancel-in-progress: true
     name: TEST CD JOB
-    environment: Test
     steps:
       - name: Output name
         run: echo "My name ${{ vars.MY_NAME }}"
@@ -63,7 +62,6 @@ jobs:
     concurrency: 
       group: group2
       cancel-in-progress: true
-    environment: Production
     steps:
       - name: Output name
         run: echo "My name ${{ vars.MY_NAME }}"
