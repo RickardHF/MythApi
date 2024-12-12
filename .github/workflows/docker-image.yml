@@ -15,10 +15,11 @@ permissions:
   packages: write
 
 
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    concurrency: group1
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4
@@ -40,32 +41,12 @@ jobs:
         tags: ghcr.io/${{ steps.set_repo_name.outputs.repository }}/mythapi:latest
   dep:
     runs-on: ubuntu-latest
-    concurrency: group1
+    strategy:
+      matrix:
+        var1: ['banan', 'epple']
+        var2: ['1', '2', '3']
     steps:
-      - name: Output name
-        run: echo "My name ${{ vars.MY_NAME }}"
-      - name: Output password
-        run: echo "My name ${{ secrets.MY_PASSWORD }}"
-  tst:
-    runs-on: ubuntu-latest
-    concurrency: 
-      group: group2
-      cancel-in-progress: true
-    name: TEST CD JOB
-    steps:
-      - name: Output name
-        run: echo "My name ${{ vars.MY_NAME }}"
-      - name: Output password
-        run: echo "My name ${{ secrets.MY_PASSWORD }}"
-  prd:
-    runs-on: ubuntu-latest
-    concurrency: 
-      group: group2
-      cancel-in-progress: true
-    steps:
-      - name: Output name
-        run: echo "My name ${{ vars.MY_NAME }}"
-      - name: Output password
-        run: echo "My name ${{ secrets.MY_PASSWORD }}"
+      - name: Output 
+        run: echo "My name ${{ matrix.var1 }} is ${{ mamatrix.var2 }}"
       
       
