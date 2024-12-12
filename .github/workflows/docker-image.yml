@@ -47,6 +47,6 @@ jobs:
         var2: ['1', '2', '3']
     steps:
       - name: Output 
-        run: echo "My name ${{ matrix.var1 }} is ${{ mamatrix.var2 }}"
+        run: echo "My name ${{ matrix.var1 }} is ${{ matrix.var2 }}"
       
       
