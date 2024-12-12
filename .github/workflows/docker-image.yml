@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image CI/CD
 
 on:
   push:
@@ -36,3 +36,13 @@ jobs:
         file: ./src/Dockerfile
         push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         tags: ghcr.io/${{ steps.set_repo_name.outputs.repository }}/mythapi:latest
+  dep:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Output name
+        run: echo "My name ${{ vars.MY_NAME }}"
+      - name: Output password
+        run: echo "My name ${{ secrets.MY_PASSWORD }}"
+      
+      
