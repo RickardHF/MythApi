@@ -12,9 +12,11 @@ public static class Gods {
 
         gods.MapGet("", GetAlllGods);
         gods.MapGet("{id}", (int id, IGodRepository repository) => repository.GetGodAsync(new GodParameter(id)));
-        gods.MapGet("search/{name}", (string name, IGodRepository repository, [FromQuery] bool includeAliases = false) => repository.GetGodByNameAsync(new GodByNameParameter(name, includeAliases)));
+        gods.MapGet("search/{name}", GetGodByName);
         gods.MapPost("", AddOrUpdateGods);
     }
+
+    public static Task<IList<God>> GetGodByName(string name, IGodRepository, [FromQuery] bool includeAliases = false) => repository.GetGodByNameAsync(new GodByNameParameter(name, includeAliases)));
 
     public static Task<List<God>> AddOrUpdateGods(List<GodInput> gods, IGodRepository repository) => repository.AddOrUpdateGods(gods);
 
