@@ -59,6 +59,8 @@ public class GodRepository : IGodRepository
 
     public Task<List<God>> GetGodByNameAsync(GodByNameParameter parameter)
     {
-        return Task.FromResult(_context.Gods.Where(god => god.Name.Contains(parameter.Name)).ToList());
+        var result = _context.Gods.FromSqlRaw($"SELECT * FROM Gods WHERE Name LIKE '%{parameter.Name}%'").ToList();
+
+        return Task.FromResult(result);
     }
 }
