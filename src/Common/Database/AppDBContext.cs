@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Mythology = MythApi.Common.Database.Models.Mythology;
 using God = MythApi.Common.Database.Models.God;
+using User = MythApi.Common.Database.Models.User;
 using MythApi.Common.Database.Models;
 
 namespace MythApi.Common.Database;
@@ -11,6 +12,7 @@ public class AppDbContext : DbContext {
     public DbSet<God> Gods { get; set; } = null!;
     public DbSet<Mythology> Mythologies { get; set; } = null!;
     public DbSet<Alias> Aliases { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         // Map entities to tables
