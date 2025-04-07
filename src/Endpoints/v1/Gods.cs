@@ -6,17 +6,22 @@ using MythApi.Gods.Models;
 namespace MythApi.Endpoints.v1;
 public static class Gods {
     public static void RegisterGodEndpoints(this IEndpointRouteBuilder endpoints) {
-        
         var gods = endpoints.MapGroup("/api/v1/gods");
 
-
-        gods.MapGet("", GetAlllGods);
-        gods.MapGet("{id}", (int id, IGodRepository repository) => repository.GetGodAsync(new GodParameter(id)));
-        gods.MapGet("search/{name}", (string name, IGodRepository repository, [FromQuery] bool includeAliases = false) => repository.GetGodByNameAsync(new GodByNameParameter(name, includeAliases)));
-        gods.MapPost("", AddOrUpdateGods);
+        gods.MapGet("", GetAllGodsHandler);
+        gods.MapGet("{id}", GetGodByIdHandler);
+        gods.MapGet("search/{name}", SearchGodsByNameHandler);
+        gods.MapPost("", AddOrUpdateGodsHandler);
     }
 
-    public static Task<List<God>> AddOrUpdateGods(List<GodInput> gods, IGodRepository repository) => repository.AddOrUpdateGods(gods);
+    private static Task<IList<God>> GetAllGodsHandler(IGodRepository repository) => repository.GetAllGodsAsync();
 
-    public static Task<IList<God>> GetAlllGods(IGodRepository repository) => repository.GetAllGodsAsync();
+    private static Task<God?> GetGodByIdHandler(int id, IGodRepository repository) => repository.GetGodAsync(new GodParameter(id));
+
+    private static Task<IList<God>> SearchGodsByNameHandler(string name, IGodRepository repository, [FromQuery] bool includeAliases = false) =>
+        repository.GetGodByNameAsync(new GodByNameParameter(name, includeAliases))
+                  .ContinueWith(task => (IList<God>)task.Result);
+
+    private static Task<List<God>> AddOrUpdateGodsHandler(List<GodInput> gods, IGodRepository repository) =>
+        repository.AddOrUpdateGods(gods);
 }
