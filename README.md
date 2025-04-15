@@ -8,6 +8,8 @@ This repository was created to refresh on my .NET knowledge, better understand D
 
 # Walkthrough
 
+
+
 # Creating the project
 
 To create a base app to start of the project I used the command `dotnet new web -o MythApi -f net8.0`. Here I specify that I want to create a new project, following the `web` template and that it should use the framework `.NET 8.0`. Also specified is the name of the project, which in this case is `MythApi`. This gives us a brand new .NET api, which already follow the minimal API approach.
