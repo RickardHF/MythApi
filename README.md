@@ -4,6 +4,8 @@
 
 Some example change
 
+Some additional change
+
 ## Motivation
 
 This repository was created to refresh on my .NET knowledge, better understand Docker and containerized apps, as well as GitHub Actions, and become more familiar with Microsoft's Entity Framework. The domain of the API was chosen more or less at random, as it wasn't deemed important for this project, and I wanted to get away from the old shop example.
